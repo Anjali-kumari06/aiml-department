@@ -22,7 +22,7 @@ jobs:
 
             if (!regex.test(title)) {
 
-              // 🏷️ Add "needs correction" label
+              // 🏷️ Add label
               await github.rest.issues.addLabels({
                 issue_number: prNumber,
                 owner: owner,
@@ -30,7 +30,7 @@ jobs:
                 labels: ["needs correction"]
               });
 
-              // 💬 Add helpful comment
+              // 💬 Add comment
               await github.rest.issues.createComment({
                 issue_number: prNumber,
                 owner: owner,
@@ -63,18 +63,6 @@ jobs:
 👉 Please edit your PR title to proceed.`
               });
 
-              // ❌ Fail the workflow
-              core.setFailed("PR title format is incorrect. Please follow the required format.");
-            } else {
-              // ✅ Remove "needs correction" label if it exists
-              try {
-                await github.rest.issues.removeLabel({
-                  issue_number: prNumber,
-                  owner: owner,
-                  repo: repo,
-                  name: "needs correction"
-                });
-              } catch (error) {
-                // Label might not exist, ignore the error
-              }
+              // ❌ Fail workflow
+              core.setFailed("Invalid PR title format");
             }
